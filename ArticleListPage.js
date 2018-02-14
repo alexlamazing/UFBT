@@ -46,31 +46,40 @@ export default class ArticleListPage extends Component<{}> {
     // const selectedPage = this.state.selectedPage;
     switch (selectedPage) {
       case '最新文章':
-        fetchURL = 'https://news.mingpao.com/rss/ins/all.xml';
+        // fetchURL = 'https://news.mingpao.com/rss/ins/all.xml';
+        fetchURL = 'http://uhkelb02-2030356052.ap-southeast-1.elb.amazonaws.com/appserver/ul/article/list.html';
         break;
       case '商場好去處':
-        fetchURL = 'https://news.mingpao.com/rss/pns/s00002.xml';
+        // fetchURL = 'https://news.mingpao.com/rss/pns/s00002.xml';
+        fetchURL = 'http://uhkelb02-2030356052.ap-southeast-1.elb.amazonaws.com/appserver/ul/article/malllist.html';
         break;
       case '遊玩情報':
-        fetchURL = 'https://news.mingpao.com/rss/pns/s00004.xml';
+        // fetchURL = 'https://news.mingpao.com/rss/pns/s00004.xml';
+        fetchURL = 'http://travel.ulifestyle.com.hk:8888/mobile-app/news-list-xml.php?size=10&offset=0';
         break;
       case '旅遊快搜':
-        fetchURL = 'https://news.mingpao.com/rss/pns/s00016.xml';
+        // fetchURL = 'https://news.mingpao.com/rss/pns/s00016.xml';
+        fetchURL = 'http://travel.ulifestyle.com.hk:8888/mobile-app/package-list-xml.php?size=10&offset=0';
         break;
       case '飲食放題':
-        fetchURL = 'https://news.mingpao.com/rss/pns/s00003.xml';
+        // fetchURL = 'https://news.mingpao.com/rss/pns/s00003.xml';
+        fetchURL = 'http://food.ulifestyle.com.hk:8888/api/ugoody/news/list?category=502011';
         break;
       case '飲得杯落':
-        fetchURL = 'https://news.mingpao.com/rss/pns/s00012.xml';
+        // fetchURL = 'https://news.mingpao.com/rss/pns/s00012.xml';
+        fetchURL = 'http://food.ulifestyle.com.hk:8888/api/ugoody/news/list?category=502016';
         break;
       case '美容情報':
-        fetchURL = 'https://news.mingpao.com/rss/pns/s00011.xml';
+        // fetchURL = 'https://news.mingpao.com/rss/pns/s00011.xml';
+        fetchURL = 'http://beauty.ulifestyle.com.hk/apps/ios/article_listing?id=7';
         break;
       case '潮流情報':
-        fetchURL = 'https://news.mingpao.com/rss/pns/s00005.xml';
+        // fetchURL = 'https://news.mingpao.com/rss/pns/s00005.xml';
+        fetchURL = 'http://beauty.ulifestyle.com.hk/apps/ios/article_listing?id=8';
         break;
       default:
-        fetchURL = 'http://travel.ulifestyle.com.hk/mobile-app/news-list-xml.php?size=10&offset=0';
+        // fetchURL = 'http://travel.ulifestyle.com.hk/mobile-app/news-list-xml.php?size=10&offset=0';
+        fetchURL = 'https://travel.ulifestyle.com.hk/mobile-app/news-list-xml.php?size=10&offset=0';
         break;
     }
 
@@ -79,8 +88,10 @@ export default class ArticleListPage extends Component<{}> {
     .then(data => {
       var self = this;
       parseString(data, function (err, result) {
-        self.setState({ articles:result.rss.channel[0].item });
+        self.setState({ articles:result.root });
       });
+    }).catch((error)=>{
+      console.log(error.message);
     });
   }
 
@@ -115,7 +126,7 @@ export default class ArticleListPage extends Component<{}> {
     this.props.navigator.push({
         title: props.item.title[0],
         component: ArticleDetail,
-        passProps: { article:props.item }
+        passProps: { article:props }
       });
   };
 
@@ -133,7 +144,7 @@ export default class ArticleListPage extends Component<{}> {
           onPress = { (tabTitle) => { this.setState({'selectedPage': tabTitle}); this.retrieveArticles(tabTitle); } }
         />
         <FlatList
-          data = {this.state.articles}
+          data = {this.state.articles.item}
           keyExtractor = {this._keyExtractor}
           renderItem = {this._renderItem}
           automaticallyAdjustContentInsets = {false}

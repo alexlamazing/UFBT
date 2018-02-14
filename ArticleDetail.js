@@ -14,7 +14,7 @@ const ArticleDetail = ({article}) => {
   return (
     <View style={styles.viewStyle}>
       <Text style={styles.textStyle}>
-        {article.description}
+        {article.item.title}
       </Text>
     </View>
   );
