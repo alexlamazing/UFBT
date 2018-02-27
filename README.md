@@ -21,5 +21,6 @@ git clone https://github.com/alexlamazing/UFBT.git
 cd UFBT
 npm install
 rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json
+react-native run-ios
 ```
 * reference: [https://github.com/oblador/react-native-vector-icons/issues/626#issuecomment-357405396](https://github.com/oblador/react-native-vector-icons/issues/626#issuecomment-357405396)
