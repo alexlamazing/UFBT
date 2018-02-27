@@ -99,19 +99,7 @@ export default class ArticleListPage extends Component<{}> {
     this.retrieveArticles(this.state.selectedPage);
   }
 
-  _keyExtractor = (item, index) => index;
-
-  // _renderItem = ({item}) => {
-  //   return (
-  //     <TouchableHighlight
-  //       underlayColor='#dddddd'>
-  //       <View>
-  //         <Text>{item.title}</Text>
-  //       </View>
-  //     </TouchableHighlight>
-  //   );
-  //
-  // };
+  _keyExtractor = (item, index) => item.title[0];
 
   _renderItem = ({item, index}) => (
     <ListItem
