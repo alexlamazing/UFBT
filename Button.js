@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, TouchableHighlight } from 'react-native';
 
 const Button = (props) => {
+  // console.log(props.buttonColor);
 
   const styles = {
     textStyle: {

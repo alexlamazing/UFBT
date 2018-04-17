@@ -1,15 +1,20 @@
+'use strict';
+
 import React, { Component } from 'react'
 import {
+  StyleSheet,
+  Image,
   View,
+  TouchableHighlight,
+  FlatList,
   Text,
 } from 'react-native';
 
-const ArticleDetail = (param) => {
-  const { article } = param.navigation.state.params
+const ArticleDetail = ({article}) => {
   return (
     <View style={styles.viewStyle}>
       <Text style={styles.textStyle}>
-        {article.title}
+        {article.item.title}
       </Text>
     </View>
   );
@@ -19,7 +24,7 @@ const styles = {
   viewStyle: {
     flex: 1,
     flexDirection: 'row',
-    marginTop: 0,
+    marginTop: 60,
     padding: 10
   },
   textStyle: {
