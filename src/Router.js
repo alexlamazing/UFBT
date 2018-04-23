@@ -1,138 +1,89 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Platform, Text, Image } from 'react-native';
 import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import ArticleList from './components/ArticleList';
-import ArticleListPage from './components/ArticleListPage';
-import ArticleDetail from './components/ArticleDetail';
+import { listType } from './listType';
+import ArticleListContainer from './containers/ArticleListContainer';
+import ArticleDetailContainer from './containers/ArticleDetailContainer';
 
-function Label({name, color, focused}) {
-  return <Text style={{textAlign: 'center', fontSize: 10, color: focused ? color : 'gray'}}>{name}</Text>;
+function createNavigationScreen(listType) {
+  const tabBarLabel = ({ tintColor, focused }) => (
+    <Text style={{ color: focused ? listType.color : 'grey', fontSize: 10, paddingBottom: 4 }}>
+      {listType.title}
+    </Text>
+  );
+  const tabBarIcon = ({ tintColor, focused }) => (
+    <Image
+      source={ listType.icon }
+      style={{ width: 22, height: 22, tintColor: focused ? listType.color : 'grey' }}
+    />
+  );
+
+  const options = {
+    title: listType.title,
+    headerTintColor: 'white',
+    headerStyle: {
+      backgroundColor: listType.color
+    },
+    tabBarLabel,
+    tabBarIcon,
+  };
+  const detailPageOptions = {
+    headerTintColor: 'white',
+    headerStyle: {
+      backgroundColor: listType.color
+    },
+    tabBarVisible: false,
+  };
+
+  return StackNavigator({
+    ArticleList: {
+      screen: props => <ArticleListContainer {...props} listType={ listType } />,
+      navigationOptions: options
+    },
+    DetailPage: {
+      screen: props => <ArticleDetailContainer {...props} listType={ listType } />,
+      navigationOptions: detailPageOptions
+    },
+  });
 }
 
-const LocalStack = StackNavigator({
-  Local: {
-    screen: ArticleListPage ,
-    navigationOptions: {
-      title:'本地',
-      headerStyle: {
-        backgroundColor:'#197cbc'
-      },
-      headerTintColor:'#FFF',
-      tabBarLabel:  props => (<Label name='本地' color='#197cbc' {...props}/>)
-    }
-
+const RouteConfigs = {
+  LifeStyle: {
+    screen: createNavigationScreen(listType.lifeStyle),
   },
-  Details: {
-    screen: ArticleDetail,
-    navigationOptions: {
-      tabBarVisible: false
-    }
-  },
-});
-
-const TravelStack = StackNavigator({
   Travel: {
-    screen: ArticleListPage ,
-    navigationOptions: {
-      title:'旅遊',
-      headerStyle: {
-        backgroundColor:'#65b145'
-      },
-      headerTintColor:'#FFF',
-      tabBarLabel:  props => (<Label name='旅遊' color='#65b145' {...props}/>)
-    }
+    screen: createNavigationScreen(listType.travel),
   },
-  Details: {
-    screen: ArticleDetail,
-    navigationOptions: {
-      tabBarVisible: false
-    }
-  },
-});
-
-const FoodStack = StackNavigator({
   Food: {
-    screen: ArticleListPage ,
-    navigationOptions: {
-      title:'飲食',
-      headerStyle: {
-        backgroundColor:'#ec9729'
-      },
-      headerTintColor:'#FFF',
-      tabBarLabel:  props => (<Label name='飲食' color='#ec9729' {...props}/>)
-    }
+    screen: createNavigationScreen(listType.food),
   },
-  Details: {
-    screen: ArticleDetail,
-    navigationOptions: {
-      tabBarVisible: false
-    }
-  },
-});
-
-const BeautyStack = StackNavigator({
   Beauty: {
-    screen: ArticleListPage ,
-    navigationOptions: {
-      title:'美容',
-      headerStyle: {
-        backgroundColor:'#df1b80'
-      },
-      headerTintColor:'#FFF',
-      tabBarLabel:  props => (<Label name='美容' color='#df1b80' {...props}/>)
-    }
-  },
-  Details: {
-    screen: ArticleDetail,
-    navigationOptions: {
-      tabBarVisible: false
-    }
-  },
-});
-
-const RouterComponent = TabNavigator(
-  {
-    Local: { screen: LocalStack },
-    Travel: { screen: TravelStack },
-    Food: { screen: FoodStack },
-    Beauty: { screen: BeautyStack }
-  },
-  {
-    navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        let color;
-        if (routeName === 'Local') {
-          iconName = "bicycle";
-          color = '#197cbc';
-        }
-        if (routeName === 'Travel') {
-          iconName = "plane";
-          color = '#65b145';
-        }
-        if (routeName === 'Food') {
-          iconName = "spoon";
-          color = '#ec9729';
-        }
-        if (routeName === 'Beauty') {
-          iconName = "star-o";
-          color = '#df1b80';
-        }
-
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
-        // return <Ionicons name={iconName} size={25} color={tintColor} />;
-        return <Icon name={iconName} size={25} color={focused ? color : 'gray'} />
-      },
-    }),
-    tabBarComponent: TabBarBottom,
-    tabBarPosition: 'bottom',
-    animationEnabled: false,
-    swipeEnabled: false,
+    screen: createNavigationScreen(listType.beauty),
   }
-);
+};
 
-export default RouterComponent;
+const tabBarOptions = Platform.OS === 'ios' ?
+  {
+    showLabel: true,
+    showIcon: true,
+  } : {
+    showIcon: true,
+    showLabel: true,
+    style: {
+      backgroundColor: '#f7f7f7',
+      // borderTopColor: 'grey',
+      // borderTopWidth: 1,
+    },
+    indicatorStyle: { backgroundColor: 'transparent' }
+  }
+
+const TabNavigatorConfig = {
+  tabBarPosition: 'bottom',
+  animationEnabled: false,
+  swipeEnabled: false,
+  tabBarOptions: tabBarOptions
+};
+
+const Router = TabNavigator(RouteConfigs, TabNavigatorConfig);
+
+export default Router;
